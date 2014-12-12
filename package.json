@@ -1,0 +1,26 @@
+{
+  "name": "tanks-for-all-the-fish",
+  "version": "1.0.0",
+  "description": "![Tanks for all the fish](./art/Logo.png)",
+  "main": "index.js",
+  "scripts": {
+    "watch": "webpack -w render.js index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/silence-of-the-hams/tanks-for-all-the-fish.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/silence-of-the-hams/tanks-for-all-the-fish/issues"
+  },
+  "homepage": "https://github.com/silence-of-the-hams/tanks-for-all-the-fish",
+  "dependencies": {
+    "maken": "0.1.0"
+  },
+  "devDependencies": {
+    "webpack": "1.4.13"
+  }
+}
