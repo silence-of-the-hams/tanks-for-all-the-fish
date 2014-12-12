@@ -32,9 +32,40 @@ function defaultAi(state, tank) {
   return {velocity: tank.velocity, rotation: tank.rotation};
 }
 
+var i = 0;
 // given a game state and array of tank ais, return the newly updated game state
-function tick(gameState, tankAis) {
+function tick(gameState) {
+  gameState.tanks = gameState.tanks.map(updateTankPosition(gameState.width, gameState.height));
+
+  if (i % 100 == 0) {
+    console.log('ticking', gameState);
+  }
+  i++;
+  //gameState.bullets = gameState.bullets.map(updateBulletPosition);
   return gameState;
+}
+
+function constrain(value, maxValue) {
+  return Math.min(800, Math.max(value, 0));
+}
+
+
+/**
+ * Given a tank with a correct rotation and velocity, update the x and y
+ */
+function updateTankPosition(maxX, maxY) {
+  return function tankMap(tank) {
+    var newX = constrain(tank.x + Math.cos(tank.rotation) * tank.velocity);
+    // flip y because coords start at 0,0 in the top left
+    var newY = constrain(tank.y +  (-1 * Math.sin(tank.rotation) * tank.velocity));
+
+    return {
+      velocity: tank.velocity,
+      rotation: tank.rotation,
+      x: newX,
+      y: newY
+    };
+  }
 }
 
 module.exports = {
