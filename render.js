@@ -7,7 +7,6 @@ function initGame(state) {
     var div = document.createElement('div');
     div.className = 'tank';
     div.style.transform = makeStyle(tank.x, tank.y, tank.rotation);
-    //console.log('div.style', div.style.tran);
     div.id = "" + i;
     document.body.appendChild(div);
   });

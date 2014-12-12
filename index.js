@@ -53,7 +53,6 @@
 	    var div = document.createElement('div');
 	    div.className = 'tank';
 	    div.style.transform = makeStyle(tank.x, tank.y, tank.rotation);
-	    //console.log('div.style', div.style.tran);
 	    div.id = "" + i;
 	    document.body.appendChild(div);
 	  });
@@ -126,7 +125,7 @@
 	  gameState.tanks = gameState.tanks.map(updateTankPosition(gameState.width, gameState.height));
 
 	  if (i % 100 == 0) {
-	    console.log('ticking', gameState);
+	    //console.log('ticking', gameState);
 	  }
 	  i++;
 	  //gameState.bullets = gameState.bullets.map(updateBulletPosition);
@@ -145,7 +144,7 @@
 	  return function tankMap(tank) {
 	    var newX = constrain(tank.x + Math.cos(tank.rotation) * tank.velocity);
 	    // flip y because coords start at 0,0 in the top left
-	    var newY = constrain(tank.y +  (-1 * Math.sin(tank.rotation) * tank.velocity));
+	    var newY = constrain(tank.y +   Math.sin(tank.rotation) * tank.velocity);
 
 	    return {
 	      velocity: tank.velocity,
