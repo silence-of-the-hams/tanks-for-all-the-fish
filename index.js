@@ -103,7 +103,6 @@
 	  return Math.floor(Math.random() * max);
 	}
 
-
 	function initRandomTank(width, height) {
 	  return function() {
 	    return {
@@ -120,13 +119,35 @@
 	  return {velocity: tank.velocity, rotation: tank.rotation, shoot: true};
 	}
 
+	// tanks need to keep track of when they last shot, or time until they can shoot.
+	// if the time until shoot is 0, they can shoot now
+	// otherwise, orders to shoot will be ignored
+
 	// given a game state and array of tank ais, return the newly updated game state
-	function tick(gameState) {
-	  gameState.tanks = gameState.tanks.map(updateTankPosition(gameState.width, gameState.height));
+	function tick(gameState, ais) {
 	  gameState.bullets = gameState.bullets.map(updateBulletPosition).filter(isInsideBounds(gameState.width, gameState.height));
+
+	  var tanks = [];
+	  gameState.tanks.forEach(function(tank, i) {
+	    // tankResult == {velocity, rotation, shoot}
+	    var tankResult = ais[i](tank, gameState);
+
+	    tankResult.velocity = constrain(tankResult.velocity, 4);
+	    tankResult.rotation = constrain(tankResult.rotation, 2 * Math.PI);
+
+	    var tank = updateTankPosition(gameState.width, gameState.height, tank, tankResult);
+	    if (tankResult.shoot) {
+	      gameState.bullets.push(fireBullet(tank.x, tank.y, tank.rotation));
+	    }
+
+	    tanks.push(tank);
+	  });
+
+	  gameState.tanks = tanks;
 
 	  // TODO:
 	  // 0. allow tanks to shoot
+	  // 0. enforce interval since last shot
 	  // 0. check for collisions between bullets and tanks
 	  // How to handle bullets that pass through tanks? draw a line, check if line
 	  // goes through tanks?
@@ -134,6 +155,11 @@
 	  return gameState;
 	}
 
+	function fireBullet(x, y, rotation) {
+	  return {x:x, y:y, rotation:rotation};
+	}
+
+	// constrain a value between 0 and a maximum value
 	function constrain(value, maxValue) {
 	  return Math.min(maxValue, Math.max(value, 0));
 	}
@@ -146,6 +172,7 @@
 
 	var BULLET_VELOCITY = 10;
 	function updateBulletPosition(bullet) {
+	  console.log('bullet is', bullet);
 	  return {
 	    x: getX(bullet.rotation, BULLET_VELOCITY, bullet.x),
 	    y: getY(bullet.rotation, BULLET_VELOCITY, bullet.y),
@@ -161,22 +188,19 @@
 	  return y + Math.sin(rotation) * velocity;
 	}
 
-
 	/**
 	 * Given a tank with a correct rotation and velocity, update the x and y
 	 */
-	function updateTankPosition(maxX, maxY) {
-	  return function tankMap(tank) {
-	    var newX = constrain(getX(tank.x, tank.rotation, tank.velocity), maxX);
-	    var newY = constrain(getY(tank.y, tank.rotation, tank.velocity), maxY);
+	function updateTankPosition(maxX, maxY, tank, tankResult) {
+	  var newX = constrain(getX(tankResult.rotation, tankResult.velocity, tank.x), maxX);
+	  var newY = constrain(getY(tankResult.rotation, tankResult.velocity, tank.y), maxY);
 
-	    return {
-	      velocity: tank.velocity,
-	      rotation: tank.rotation,
-	      x: newX,
-	      y: newY
-	    };
-	  }
+	  return {
+	    velocity: tankResult.velocity,
+	    rotation: tankResult.rotation,
+	    x: newX,
+	    y: newY
+	  };
 	}
 
 	module.exports = {
