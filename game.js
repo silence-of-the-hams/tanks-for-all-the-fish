@@ -28,7 +28,7 @@ function initRandomTank(width, height) {
 }
 
 // a dummy default ai to do nothing to change the params
-function defaultAi(state, tank) {
+function defaultAi(tank, state) {
   return {velocity: tank.velocity, rotation: tank.rotation, shoot: true};
 }
 
@@ -45,6 +45,7 @@ function tick(gameState, ais) {
     // tankResult == {velocity, rotation, shoot}
     var tankResult = ais[i](tank, gameState);
 
+    //console.log('tankResult', tankResult);
     tankResult.velocity = constrain(tankResult.velocity, 4);
     tankResult.rotation = constrain(tankResult.rotation, 2 * Math.PI);
 
@@ -85,7 +86,7 @@ function isInsideBounds(maxX, maxY) {
 
 var BULLET_VELOCITY = 10;
 function updateBulletPosition(bullet) {
-  console.log('bullet is', bullet);
+  //console.log('bullet is', bullet);
   return {
     x: getX(bullet.rotation, BULLET_VELOCITY, bullet.x),
     y: getY(bullet.rotation, BULLET_VELOCITY, bullet.y),
