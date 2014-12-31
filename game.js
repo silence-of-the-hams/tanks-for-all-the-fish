@@ -1,5 +1,4 @@
 function startGame(width, height, tanks) {
-  console.log('width is', width, 'height is', height);
   var state = {
     width: width,
     height: height,
@@ -12,17 +11,19 @@ function startGame(width, height, tanks) {
   return state;
 }
 
-function getRandomNumber(max) {
+function getRandomInteger(max) {
   return Math.floor(Math.random() * max);
 }
+
+var MAX_TANK_VELOCITY = 2;
 
 function initRandomTank(width, height) {
   return function() {
     return {
-      x: getRandomNumber(width),
-      y: getRandomNumber(height),
-      rotation: Math.random() * (2 * Math.PI),
-      velocity: Math.random()
+      x: getRandomInteger(width),
+      y: getRandomInteger(height),
+      rotation: Math.random() * 2 * Math.PI,
+      velocity: Math.random() * MAX_TANK_VELOCITY
     };
   }
 }
@@ -46,7 +47,7 @@ function tick(gameState, ais) {
     var tankResult = ais[i](tank, gameState);
 
     //console.log('tankResult', tankResult);
-    tankResult.velocity = constrain(tankResult.velocity, 4);
+    tankResult.velocity = constrain(tankResult.velocity, MAX_TANK_VELOCITY);
     tankResult.rotation = constrain(tankResult.rotation, 2 * Math.PI);
 
     var tank = updateTankPosition(gameState.width, gameState.height, tank, tankResult);
