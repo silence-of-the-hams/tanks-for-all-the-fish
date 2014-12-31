@@ -30,7 +30,8 @@ function initRandomTank(width, height) {
 
 // a dummy default ai to do nothing to change the params
 function defaultAi(tank, state) {
-  return {velocity: tank.velocity, rotation: tank.rotation, shoot: true};
+  // random walk for velocity
+  return {velocity: tank.velocity + Math.random() - 0.5, rotation: tank.rotation + Math.random() - 0.5, shoot: true};
 }
 
 // tanks need to keep track of when they last shot, or time until they can shoot.
