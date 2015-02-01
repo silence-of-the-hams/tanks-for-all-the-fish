@@ -18,9 +18,14 @@
   },
   "homepage": "https://github.com/silence-of-the-hams/tanks-for-all-the-fish",
   "dependencies": {
-    "maken": "0.1.0"
+    "6to5-core": "3.2.1",
+    "6to5-loader": "3.0.0",
+    "maken": "0.1.0",
+    "ts-loader": "0.2.2",
+    "webpack": "1.5.3"
   },
   "devDependencies": {
+    "mocha": "2.1.0",
     "webpack": "1.4.13"
   }
 }
