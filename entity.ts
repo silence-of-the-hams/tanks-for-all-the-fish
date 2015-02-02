@@ -10,12 +10,11 @@ function constrain(value: number, maxValue: number): number {
   return Math.min(maxValue, Math.max(value, 0));
 }
 
-var TANK_SHOT_INTERVAL = 4000;
-
+var TANK_SHOT_INTERVAL = 200;
 function calculateTimeUntilReadyToShoot(tank: Tank): number {
   var now = Date.now();
   // it takes 4 seconds until a tank can shoot again
-  return Math.max(now - (tank.lastShotTime + TANK_SHOT_INTERVAL), 0);
+  return Math.max((tank.lastShotTime + TANK_SHOT_INTERVAL) - now, 0);
 }
 
 function canTankShoot(tank: Tank): boolean {
@@ -27,7 +26,14 @@ export class Tank {
   static HEIGHT: number = 20;
   health: number = 5;
   // TODO: name
-  constructor(public x: number, public y: number, public velocity: number, public rotation: number) {}
+  constructor(
+    public x: number,
+    public y: number,
+    public velocity: number,
+    public rotation: number,
+    public ai: AI,
+    public name: string
+  ) {}
   lastShotTime: number = 0;
   timeUntilReadyToShoot: number = 0;
   tick(maxX: number, maxY: number): void {
@@ -48,7 +54,7 @@ export class Tank {
     }
     this.lastShotTime = Date.now();
     this.timeUntilReadyToShoot = calculateTimeUntilReadyToShoot(this);
-    return new Bullet(this.x, this.y, this.rotation);
+    return new Bullet(this.x, this.y, this.rotation, this.name);
   }
   serialize(): any {
     return {
@@ -62,12 +68,17 @@ export class Tank {
   }
 }
 
-var BULLET_VELOCITY = 40;
+var BULLET_VELOCITY = 10;
 export class Bullet {
   velocity: number = BULLET_VELOCITY;
-  constructor(public x: number, public y: number, public rotation: number) {}
-  // TODO: how to handle removing bullets outside of bounds? make the engine
-  // do that?
+  constructor(
+    public x: number,
+    public y: number,
+    public rotation: number,
+    public shotBy: string
+  ) {}
+  // bullets are removed by engine when they go out of bounds, so don't
+  // check here
   tick(maxX: number, maxY: number): void {
     this.x = getX(this.rotation, this.velocity, this.x);
     this.y = getY(this.rotation, this.velocity, this.y);
@@ -106,6 +117,7 @@ function serialize(game: GameState): any {
 
 export interface AI {
   (state: GameState): TankMovementResult;
+  aiName?: string;
 }
 
 function getRandomInteger(max: number): number {
@@ -115,7 +127,7 @@ function getRandomInteger(max: number): number {
 function initRandomTank(width, height) {
   return function(ai: AI): Tank {
     return new Tank(getRandomInteger(width), getRandomInteger(height),
-      Math.random() * 2 * Math.PI, Math.random() * 2 * Math.PI);
+      Math.random() * 2 * Math.PI, Math.random() * 2 * Math.PI, ai, ai.aiName);
   }
 }
 
@@ -135,7 +147,8 @@ function isInBounds(bullet: Bullet, game: GameState): boolean {
 }
 
 function isColliding(bullet: Bullet, tank: Tank): boolean {
-  return (bullet.x >= tank.x - (Tank.WIDTH / 2) &&
+  return (bullet.shotBy != tank.name &&
+          bullet.x >= tank.x - (Tank.WIDTH / 2) &&
           bullet.x <= tank.x + (Tank.WIDTH / 2) &&
           bullet.y >= tank.y - (Tank.HEIGHT / 2) &&
           bullet.y <= tank.y + (Tank.HEIGHT / 2));
@@ -145,18 +158,21 @@ function isDead(t: Tank): boolean {
   return t.health <= 0;
 }
 
+// TODO: make tank own bullets not hit themselves
+// TODO: check victory condition in renderer
+
 export function tick(game: GameState, ais: AI[]): GameState {
   var serializedState = serialize(game);
-  var results: TankMovementResult[] = ais.map(function(ai) { return ai(serializedState) });
+  var results: TankMovementResult[] = game.tanks.map(function(tank) { return tank.ai(serializedState) });
 
-  // dumb that this is from
+  // update tank positions based on ai results
   results.forEach(function(result: TankMovementResult, i: number) {
-    // Update rotation and speed from results
     game.tanks[i].updateVelocityAndRotationFromAIResults(result);
-    // shoot if ai says shoot
     if (result.shoot) {
+      console.log('shoot');
       // only shoot if they are allowed to
-      var bullet = game.tanks[i].shoot() && game.bullets.push(bullet);
+      var bullet = game.tanks[i].shoot();
+      bullet && game.bullets.push(bullet);
     }
   });
 

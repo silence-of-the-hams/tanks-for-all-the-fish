@@ -11,6 +11,5 @@ module.exports = {
     loaders: [
       {test: /\.ts$/, loader: '6to5-loader!ts-loader?sourceMap&target=ES6'}
     ]
-  },
-  devtool: '#eval'
+  }
 };
