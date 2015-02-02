@@ -1,20 +1,20 @@
 import game = require('./entity');
 
-var colors = ['black', 'grey', 'red', 'yellow', 'blue', 'green', 'pink', 'white'];
+/*var colors = ['black', 'grey', 'red', 'yellow', 'blue', 'green', 'pink', 'white'];*/
 
-function colorsToImages(colors) {
-  return colors.reduce((memo, c) => {
-    var i = new Image();
-    i.src = `/img/tank-${c}.png`;
-    memo[c] = i;
-    return memo
-  }, {});
-}
-var colorToImage = colorsToImages(colors);
+/*function colorsToImages(colors) {*/
+  /*return colors.reduce((memo, c) => {*/
+    /*var i = new Image();*/
+    /*i.src = `/img/tank-${c}.png`;*/
+    /*memo[c] = i;*/
+    /*return memo*/
+  /*}, {});*/
+/*}*/
+/*var colorToImage = colorsToImages(colors);*/
 
 // TODO: map tanks to colors
 
-var tankImage = new Image(); tankImage.src = '/img/tank.png';
+var tankImage = new Image(); tankImage.src = '/img/tank-red.png';
 var bulletImage = new Image(); bulletImage.src = '/img/bullet.png';
 
 var context = (<HTMLCanvasElement>document.querySelector('canvas')).getContext('2d');

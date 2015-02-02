@@ -10,7 +10,7 @@ function constrain(value: number, maxValue: number): number {
   return Math.min(maxValue, Math.max(value, 0));
 }
 
-var TANK_SHOT_INTERVAL = 200;
+var TANK_SHOT_INTERVAL = 100;
 function calculateTimeUntilReadyToShoot(tank: Tank): number {
   var now = Date.now();
   // it takes 4 seconds until a tank can shoot again
@@ -68,7 +68,7 @@ export class Tank {
   }
 }
 
-var BULLET_VELOCITY = 10;
+var BULLET_VELOCITY = 20;
 export class Bullet {
   velocity: number = BULLET_VELOCITY;
   constructor(
