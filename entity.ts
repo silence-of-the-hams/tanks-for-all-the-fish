@@ -1,3 +1,5 @@
+export var MAX_HEALTH = 8;
+
 function getX(rotation: number, velocity: number, x: number): number {
   return x + Math.cos(rotation) * velocity;
 }
@@ -24,7 +26,7 @@ function canTankShoot(tank: Tank): boolean {
 export class Tank {
   static WIDTH: number = 16;
   static HEIGHT: number = 16;
-  health: number = 1;
+  health: number = MAX_HEALTH;
   constructor(
     public x: number,
     public y: number,

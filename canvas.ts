@@ -35,11 +35,15 @@ function draw(state: game.GameState, ctx: CanvasRenderingContext2D) {
   }
 
   function drawTank(tank) {
+    var num = tank.health / game.MAX_HEALTH;
     var tankImage = colorToImage[tank.color];
     ctx.save();
     ctx.translate(tank.x, tank.y);
     // draw tank name
     ctx.fillText(tank.name, 0, 30);
+    ctx.strokeRect(-2, 35, 25, 7);
+    ctx.fillStyle = 'rgb(' + Math.round((1 - num) * 255) + ', ' + Math.round(num * 255) + ', 0)';
+    ctx.fillRect(-1, 36, Math.round(num * 23), 5);
     // center on tank image which is 16 x 16
     ctx.translate(8, 8);
     ctx.rotate(tank.rotation);
