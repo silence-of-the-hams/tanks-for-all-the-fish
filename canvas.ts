@@ -51,7 +51,7 @@ function draw(state: game.GameState, ctx: CanvasRenderingContext2D) {
 }
 
 function drawVictory(victor: game.Tank, ctx: CanvasRenderingContext2D): void {
-  ctx.font = '60px "Helvetica Neue"';
+  ctx.font = '30px "Helvetica Neue"';
   ctx.clearRect(0, 0, state.width, state.height);
   ctx.fillText(`Congratulations ${victor.name} on glorious victory!`, 100, 100);
 }
