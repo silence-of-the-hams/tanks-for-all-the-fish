@@ -6,8 +6,8 @@ function getY(rotation: number, velocity: number, y: number): number {
   return y + Math.sin(rotation) * velocity;
 }
 
-function constrain(value: number, maxValue: number): number {
-  return Math.min(maxValue, Math.max(value, 0));
+function constrain(value: number, maxValue: number, minValue: number = 0): number {
+  return Math.min(maxValue, Math.max(value, minValue));
 }
 
 var TANK_SHOT_INTERVAL = 100;
@@ -22,10 +22,9 @@ function canTankShoot(tank: Tank): boolean {
 }
 
 export class Tank {
-  static WIDTH: number = 20;
-  static HEIGHT: number = 20;
-  health: number = 5;
-  // TODO: name
+  static WIDTH: number = 16;
+  static HEIGHT: number = 16;
+  health: number = 1;
   constructor(
     public x: number,
     public y: number,
@@ -45,8 +44,8 @@ export class Tank {
     this.health -= 1;
   }
   updateVelocityAndRotationFromAIResults(result: TankMovementResult): void {
-    this.velocity = result.velocity;
-    this.rotation = this.rotation + (result.angularVelocity * ((Math.PI * 2) / 30));
+    this.velocity = constrain(result.velocity, 1, -1);
+    this.rotation = this.rotation + (constrain(result.angularVelocity, 1, -1) * ((Math.PI * 2) / 30));
   }
   shoot(): Bullet {
     if (!canTankShoot(this)) {
@@ -104,6 +103,7 @@ export interface GameState {
   bullets: Bullet[];
   width: number;
   height: number;
+  victor?: Tank;
 }
 
 function serialize(game: GameState): any {
@@ -147,7 +147,7 @@ function isInBounds(bullet: Bullet, game: GameState): boolean {
 }
 
 function isColliding(bullet: Bullet, tank: Tank): boolean {
-  return (bullet.shotBy != tank.name &&
+  return (
           bullet.x >= tank.x - (Tank.WIDTH / 2) &&
           bullet.x <= tank.x + (Tank.WIDTH / 2) &&
           bullet.y >= tank.y - (Tank.HEIGHT / 2) &&
@@ -207,6 +207,7 @@ export function tick(game: GameState, ais: AI[]): GameState {
   // TODO: notify of glorious victory
   if (game.tanks.length == 1) {
     console.log('glorious victory!');
+    game.victor = game.tanks[0];
   } else if (game.tanks.length == 0) {
     console.log('wat');
   }
