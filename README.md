@@ -11,8 +11,8 @@ Write an AI, compete against other AIs, and battle for glorious victory!
 ## Installation
 ```bash
 npm i
-webpack -w
 npm start
+webpack -w
 ```
 
 visit [http://localhost:3000](http://localhost:3000)
@@ -82,3 +82,10 @@ function ai(worldState) {
 }
 ```
 
+### Local Development
+
+- To add a tank AI to your game, save it into the `./ais` folder.
+- To temporarily exclude an AI that is in your `./ais` folder, add "disabled" to its name like so
+ - my-cool-ai.disabled.js
+- To create AI clones for testing, add a number to its name like so
+ - my-cool-ai.5.js.

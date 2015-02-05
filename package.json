@@ -4,7 +4,7 @@
   "description": "![Tanks for all the fish](./art/Logo.png)",
   "main": "index.js",
   "scripts": {
-    "start": "serve .",
+    "start": "node serve",
     "watch": "webpack -w render.js index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -21,7 +21,9 @@
   "dependencies": {
     "6to5-core": "3.2.1",
     "6to5-loader": "3.0.0",
+    "express": "4.11.2",
     "maken": "0.1.0",
+    "node-watch": "0.3.4",
     "ts-loader": "0.2.2",
     "webpack": "1.5.3"
   },

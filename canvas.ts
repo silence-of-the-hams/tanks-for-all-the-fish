@@ -1,3 +1,4 @@
+/// <reference path="./types/require.d.ts" />
 import game = require('./entity');
 
 /*var colors = ['black', 'grey', 'red', 'yellow', 'blue', 'green', 'pink', 'white'];*/
@@ -56,13 +57,7 @@ function drawVictory(victor: game.Tank, ctx: CanvasRenderingContext2D): void {
   ctx.fillText(`Congratulations ${victor.name} on glorious victory!`, 100, 100);
 }
 
-var aiThing: game.AI = <game.AI>function(state: game.GameState): game.TankMovementResult {
-  return {angularVelocity: 0.2, shoot: true, velocity: 1};
-}
-aiThing.aiName = 'durp';
-
-// TODO: make AI pull from gists somehow, via magic
-var ais = [aiThing, aiThing, aiThing, aiThing, aiThing, aiThing];
+var ais = require('./ais');
 var state = game.startGame(800, 800, ais);
 
 function tick() {
