@@ -1,19 +1,22 @@
-var express = require('express');
-var app = express();
 var Firebase = require('firebase');
-var body = require('body-parser');
+var ref = new Firebase('https://tanks-for-fish.firebaseio.com/ais');
+var fs = require('fs');
+var path = require('path');
+var rimraf = require('rimraf');
 
-app.set('view engine', 'jade');
-app.set('views', __dirname);
-app.use(body.urlencoded({extended: false}));
+function saveAis(value) {
+  var value = value.val();
+  console.log('got stuff from firebase: ', value);
+  try {
+    rimraf.sync(path.join(__dirname, '..', 'ais'));
+  } catch (e) {
+    console.error('e is', e);
+  }
 
-app.get('/', function(req, res) {
-  res.render('index');
-});
+  fs.mkdirSync(path.join(__dirname, '..', 'ais'));
+  Object.keys(value).forEach(function(aiName) {
+    fs.writeFileSync(path.join(__dirname, '..', 'ais', aiName + '.js'), value[aiName]);
+  });
+}
 
-app.post('/', function(req, res) {
-  console.log('req.body is', req.body);
-  res.send(200);
-});
-
-app.listen(3003);
+ref.on('value', saveAis)
