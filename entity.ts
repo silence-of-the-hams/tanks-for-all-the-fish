@@ -31,7 +31,8 @@ export class Tank {
     public velocity: number,
     public rotation: number,
     public ai: AI,
-    public name: string
+    public name: string,
+    public color: string
   ) {}
   lastShotTime: number = 0;
   timeUntilReadyToShoot: number = 0;
@@ -59,6 +60,7 @@ export class Tank {
     return {
       x: this.x,
       y: this.y,
+      color: this.color,
       rotation: this.rotation,
       velocity: this.velocity,
       timeUntilShoot: this.timeUntilReadyToShoot,
@@ -120,6 +122,12 @@ export interface AI {
   aiName?: string;
 }
 
+function getRandomColor() {
+  var colors = ['grey', 'red', 'yellow', 'blue', 'green', 'pink', 'white'];
+  var i = Math.floor(Math.random() * colors.length)
+  return colors[i];
+}
+
 function getRandomInteger(max: number): number {
   return Math.floor(Math.random() * max);
 }
@@ -127,7 +135,7 @@ function getRandomInteger(max: number): number {
 function initRandomTank(width, height) {
   return function(ai: AI): Tank {
     return new Tank(getRandomInteger(width), getRandomInteger(height),
-      Math.random() * 2 * Math.PI, Math.random() * 2 * Math.PI, ai, ai.aiName);
+      Math.random() * 2 * Math.PI, Math.random() * 2 * Math.PI, ai, ai.aiName, getRandomColor());
   }
 }
 
@@ -169,7 +177,6 @@ export function tick(game: GameState, ais: AI[]): GameState {
   results.forEach(function(result: TankMovementResult, i: number) {
     game.tanks[i].updateVelocityAndRotationFromAIResults(result);
     if (result.shoot) {
-      console.log('shoot');
       // only shoot if they are allowed to
       var bullet = game.tanks[i].shoot();
       bullet && game.bullets.push(bullet);

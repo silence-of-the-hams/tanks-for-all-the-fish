@@ -1,21 +1,17 @@
 /// <reference path="./types/require.d.ts" />
 import game = require('./entity');
 
-/*var colors = ['black', 'grey', 'red', 'yellow', 'blue', 'green', 'pink', 'white'];*/
+var colors = ['grey', 'red', 'yellow', 'blue', 'green', 'pink', 'white'];
+function colorsToImages(colors) {
+  return colors.reduce((memo, c) => {
+    var i = new Image();
+    i.src = `/img/tank-${c}.png`;
+    memo[c] = i;
+    return memo
+  }, {});
+}
+var colorToImage = colorsToImages(colors);
 
-/*function colorsToImages(colors) {*/
-  /*return colors.reduce((memo, c) => {*/
-    /*var i = new Image();*/
-    /*i.src = `/img/tank-${c}.png`;*/
-    /*memo[c] = i;*/
-    /*return memo*/
-  /*}, {});*/
-/*}*/
-/*var colorToImage = colorsToImages(colors);*/
-
-// TODO: map tanks to colors
-
-var tankImage = new Image(); tankImage.src = '/img/tank-red.png';
 var bulletImage = new Image(); bulletImage.src = '/img/bullet.png';
 
 var context = (<HTMLCanvasElement>document.querySelector('canvas')).getContext('2d');
@@ -39,6 +35,7 @@ function draw(state: game.GameState, ctx: CanvasRenderingContext2D) {
   }
 
   function drawTank(tank) {
+    var tankImage = colorToImage[tank.color];
     ctx.save();
     ctx.translate(tank.x, tank.y);
     // draw tank name
