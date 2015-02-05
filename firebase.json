@@ -1,0 +1,9 @@
+{
+  "firebase": "tanks-for-fish",
+  "public": "./",
+  "ignore": [
+    "firebase.json",
+    "**/.*",
+    "**/node_modules/**"
+  ]
+}

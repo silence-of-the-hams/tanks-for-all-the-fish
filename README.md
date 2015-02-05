@@ -76,12 +76,15 @@ Your AI function should return an object that looks like this:
 Here is an example AI function. It just slowly turns clockwise and shoots as
 often as possible, ignoring all state.
 
-```javascript
+```JavaScript
+
 function ai(worldState) {
   return {shoot: true, velocity: 0.5, angularVelocity: 0.2};
 }
-```
 
+ai.aiName = 'FISHY BUSINESS';
+module.exports = ai;
+```
 ### Local Development
 
 - To add a tank AI to your game, save it into the `./ais` folder.
