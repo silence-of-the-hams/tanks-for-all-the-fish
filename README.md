@@ -39,7 +39,8 @@ whatever else you want! The game state is an object that looks like this:
       y: 100, // y position. top is 0, increases as you go down
       velocity: 1, // between -1 and 1. tanks can go backwards too!
       rotation: 3.14, // between 0 and 2 * Math.PI. In radians. 0 is facing right.
-      health: 3, // tanks start with 3, and die if they reach 0. each hit by a bullet removes 1
+      health: 3, // tanks start with 3, and die if they reach 0.
+                 // each hit by a bullet removes 1 health.
       timeUntilShoot: 3000 // time in milliseconds until the tank can shoot again
       name: 'Yolo Swaggins' // tank name, so you can tell whose it is!
     }
@@ -67,7 +68,6 @@ Your AI function should return an object that looks like this:
   shoot: true // a boolean saying if your tank should shoot this tick or not.
               // note: you will only be able to shoot if your timeUntilShoot is 0
               // returning true when you can't shoot won't do anything
-}
 }
 ```
 

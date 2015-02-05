@@ -4,6 +4,7 @@
   "description": "![Tanks for all the fish](./art/Logo.png)",
   "main": "index.js",
   "scripts": {
+    "start": "serve .",
     "watch": "webpack -w render.js index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
