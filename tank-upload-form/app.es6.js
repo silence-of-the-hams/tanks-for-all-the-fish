@@ -6,7 +6,18 @@ var ref = new Firebase('https://tanks-for-fish.firebaseio.com/ais');
 
 var App = React.createClass({
   mixins: [React.addons.LinkedStateMixin],
-  getInitialState() { return {}; },
+  componentDidMount() {
+    ref.on('value', (value) => {
+      var val = value.val();
+      var tanks = Object.keys(val).map(function(k) {
+        return val[k];
+      });
+      this.setState({tanks});
+    });
+  },
+  getInitialState() {
+    return {tanks: []};
+  },
   saveToFirebase(e) {
     e.preventDefault();
     var ai = {
@@ -59,8 +70,27 @@ var App = React.createClass({
             Submit
           </Button>
         </form>
+
+      <TankFunctions tankFunctions={this.state.tanks} />
       </div>
     );
+  }
+});
+
+var TankFunction = React.createClass({
+  render() {
+    return <div>
+    <h2>{this.props.tankName}</h2>
+    <pre>{this.props.tank}</pre>
+    </div>
+  }
+});
+
+var TankFunctions = React.createClass({
+  render() {
+    return <div>
+      {this.props.tankFunctions.map(function(t) { return <TankFunction tank={t} tankName={t.aiName} /> })}
+    </div>
   }
 });
 
