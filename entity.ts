@@ -1,5 +1,5 @@
 'use strict';
-export var MAX_HEALTH = 8;
+export var MAX_HEALTH = 3;
 
 function getX(rotation: number, velocity: number, x: number): number {
   return x + Math.cos(rotation) * velocity;
@@ -13,7 +13,7 @@ function constrain(value: number, maxValue: number, minValue: number = 0): numbe
   return Math.min(maxValue, Math.max(value, minValue));
 }
 
-var TANK_SHOT_INTERVAL = 100;
+var TANK_SHOT_INTERVAL = 1000;
 function calculateTimeUntilReadyToShoot(tank: Tank): number {
   var now = Date.now();
   // it takes 4 seconds until a tank can shoot again
