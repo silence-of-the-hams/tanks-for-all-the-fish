@@ -28,6 +28,7 @@ export class Tank {
   static WIDTH: number = 16;
   static HEIGHT: number = 16;
   health: number = MAX_HEALTH;
+  turretRotation: number;
   constructor(
     public x: number,
     public y: number,
@@ -50,6 +51,14 @@ export class Tank {
   updateVelocityAndRotationFromAIResults(result: TankMovementResult): void {
     this.velocity = constrain(result.velocity, 1, -1);
     this.rotation = this.rotation + (constrain(result.angularVelocity, 1, -1) * ((Math.PI * 2) / 30));
+    if (result.turretRotation == null) {
+      result.turretRotation = this.rotation;
+      console.log('result.turretRotation was null, now is', result.turretRotation);
+      if (result.turretRotation !== result.turretRotation) {
+        console.log("NAN WAT", this.name);
+      }
+    }
+    this.turretRotation = result.turretRotation;
   }
   shoot(): Bullet {
     if (!canTankShoot(this)) {
@@ -57,7 +66,8 @@ export class Tank {
     }
     this.lastShotTime = Date.now();
     this.timeUntilReadyToShoot = calculateTimeUntilReadyToShoot(this);
-    return new Bullet(this.x, this.y, this.rotation, this.name);
+    console.log('shooting at', this.turretRotation);
+    return new Bullet(this.x, this.y, this.turretRotation, this.name);
   }
   serialize(): any {
     return {
@@ -68,6 +78,7 @@ export class Tank {
       velocity: this.velocity,
       timeUntilShoot: this.timeUntilReadyToShoot,
       name: this.name,
+      turretRotation: this.turretRotation,
       health: this.health
     };
   }
@@ -102,6 +113,7 @@ export interface TankMovementResult {
   angularVelocity: number;
   shoot: boolean;
   velocity: number;
+  turretRotation?: number;
 };
 
 export interface GameState {
@@ -176,7 +188,7 @@ function isDead(t: Tank): boolean {
 var defaultRes = {shoot: true, velocity: 1, angularVelocity: 0.1};
 export function tick(game: GameState, ais: AI[]): GameState {
   var serializedState = serialize(game);
-  var results: TankMovementResult[] = game.tanks.map(function(tank) { 
+  var results: TankMovementResult[] = game.tanks.map(function(tank) {
     var res;
     try {
       res = tank.ai(serializedState);
