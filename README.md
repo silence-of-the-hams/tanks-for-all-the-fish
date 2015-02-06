@@ -12,6 +12,7 @@ Write an AI, compete against other AIs, and battle for glorious victory!
 ```bash
 npm i
 npm start
+npm i -g webpack
 webpack -w
 ```
 
