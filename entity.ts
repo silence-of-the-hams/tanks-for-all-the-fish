@@ -67,6 +67,7 @@ export class Tank {
       rotation: this.rotation,
       velocity: this.velocity,
       timeUntilShoot: this.timeUntilReadyToShoot,
+      name: this.name,
       health: this.health,
     };
   }
