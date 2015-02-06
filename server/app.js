@@ -15,7 +15,8 @@ function saveAis(value) {
 
   fs.mkdirSync(path.join(__dirname, '..', 'ais'));
   Object.keys(value).forEach(function(aiName) {
-    fs.writeFileSync(path.join(__dirname, '..', 'ais', aiName + '.js'), value[aiName]);
+    console.log('aiName is', aiName, 'value is', value);
+    fs.writeFileSync(path.join(__dirname, '..', 'ais', aiName + '.js'), value[aiName].ai);
   });
 }
 

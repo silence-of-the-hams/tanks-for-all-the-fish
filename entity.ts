@@ -1,3 +1,4 @@
+'use strict';
 export var MAX_HEALTH = 8;
 
 function getX(rotation: number, velocity: number, x: number): number {
@@ -171,9 +172,22 @@ function isDead(t: Tank): boolean {
 // TODO: make tank own bullets not hit themselves
 // TODO: check victory condition in renderer
 
+var defaultRes = {shoot: true, velocity: 1, angularVelocity: 0.1};
 export function tick(game: GameState, ais: AI[]): GameState {
   var serializedState = serialize(game);
-  var results: TankMovementResult[] = game.tanks.map(function(tank) { return tank.ai(serializedState) });
+  var results: TankMovementResult[] = game.tanks.map(function(tank) { 
+    var res;
+    try {
+      res = tank.ai(serializedState);
+      if (!res) {
+        res = defaultRes;
+      }
+    } catch (e) {
+      console.error('tank', tank.name, 'is throwing exceptions, oh no!');
+      res = defaultRes;
+    }
+    return res;
+  });
 
   // update tank positions based on ai results
   results.forEach(function(result: TankMovementResult, i: number) {
