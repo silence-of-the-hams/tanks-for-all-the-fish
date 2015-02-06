@@ -93,3 +93,96 @@ module.exports = ai;
  - my-cool-ai.disabled.js
 - To create AI clones for testing, add a number to its name like so
  - my-cool-ai.5.js.
+
+
+## A RAD EXAMPLE
+
+```JavaScript
+memory = {
+		turn : 0,
+		targetIndex : -1,
+		targetpos : {x:0,y:0},
+};
+
+var funky = function (state) {
+
+	var self = this;	
+	
+	var m = memory;
+	
+	m.turn++;
+	//console.log(m.turn);
+		
+	//	utils
+	function isMe(t)
+	{
+		if (typeof(t) === 'undefined')
+		{
+			console.log("what?");
+		}
+		if (t.x === self.x && t.y === self.y)
+			return true;
+		else
+			return false;
+	}
+	function pickTarget()
+	{
+		var pickIndex = 0;
+		for (var i = 0; i < state.tanks.length; i++)
+		{
+			if (isMe(state.tanks[i]))
+				continue;
+			return i;
+		}
+		return -1;
+	}
+	function updateTargetIndex(targetIndex)
+	{
+		if (targetIndex < 0 || targetIndex >= state.tanks.length)
+			return pickTarget();
+		if (isMe(state.tanks[targetIndex]))
+			return pickTarget();
+		return targetIndex;	//	keep it
+	}
+	function updateTargetTracking(targetIndex)
+	{
+		var t = state.tanks[targetIndex];
+		m.targetpos = {x:t.x, y:t.y};
+	}
+	
+	//	logic
+	//	defaults
+	var avel = 1;
+	var lvel = 1;
+	
+	m.targetIndex = updateTargetIndex(m.targetIndex);
+	if (m.targetIndex >= 0)
+	{
+		updateTargetTracking(m.targetIndex);
+		
+		//	turn (right) toward target.
+		var dy = m.targetpos.y - this.y;
+		var dx = m.targetpos.x - this.x;
+		if (Math.sqrt(dx*dx+dy*dy) < 20)
+		{
+			//close enough...
+			m.targetpos.x = Math.random() * state.width;
+			m.targetpos.y = Math.random() * state.height;
+			dx = dy = 1;
+		}
+		var desAngle = Math.atan2(dy, dx);
+		var dAngle = desAngle - this.rotation;
+		var onAmount = Math.abs(dAngle);
+		avel = dAngle;
+		lvel = 1;
+		// hey
+		if (onAmount < 0.1)
+			lvel = 1;
+	}
+	
+	return {angularVelocity: avel, shoot: true, velocity: lvel};
+	
+	//return {angularVelocity: Math.random() * 2 - 1, shoot: true, velocity: 1};
+	
+};
+```
