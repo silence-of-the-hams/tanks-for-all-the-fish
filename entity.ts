@@ -84,7 +84,7 @@ export class Tank {
   }
 }
 
-var BULLET_VELOCITY = 20;
+var BULLET_VELOCITY = 10;
 export class Bullet {
   velocity: number = BULLET_VELOCITY;
   constructor(
@@ -171,7 +171,7 @@ function isInBounds(bullet: Bullet, game: GameState): boolean {
 }
 
 function isColliding(bullet: Bullet, tank: Tank): boolean {
-  return (
+  return (bullet.shotBy != tank.name &&
           bullet.x >= tank.x - (Tank.WIDTH / 2) &&
           bullet.x <= tank.x + (Tank.WIDTH / 2) &&
           bullet.y >= tank.y - (Tank.HEIGHT / 2) &&

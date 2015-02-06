@@ -20,7 +20,7 @@ function draw(state: game.GameState, ctx: CanvasRenderingContext2D) {
   ctx.font = '10px "Helvetica Neue"';
   ctx.clearRect(0, 0, state.width, state.height);
 
-  state.tanks.forEach(drawTank);
+  state.tanks.forEach(drawTank.bind(null, ctx));
   state.bullets.forEach(drawBullet);
 
   function drawBullet(bullet) {
@@ -34,28 +34,30 @@ function draw(state: game.GameState, ctx: CanvasRenderingContext2D) {
     ctx.restore();
   }
 
-  function drawTank(tank) {
-    var num = tank.health / game.MAX_HEALTH;
-    var tankImage = colorToImage[tank.color];
-    ctx.save();
-    ctx.translate(tank.x, tank.y);
-    // draw tank name
-    ctx.fillText(tank.name, 0, 30);
-    ctx.strokeRect(-2, 35, 25, 7);
-    ctx.fillStyle = 'rgb(' + Math.round((1 - num) * 255) + ', ' + Math.round(num * 255) + ', 0)';
-    ctx.fillRect(-1, 36, Math.round(num * 23), 5);
-    // center on tank image which is 16 x 16
-    ctx.translate(8, 8);
-    ctx.rotate(tank.rotation);
-    ctx.drawImage(tankImage, -8, -8);
-    ctx.restore();
-  }
+}
+
+function drawTank(ctx, tank) {
+  var num = tank.health / game.MAX_HEALTH;
+  var tankImage = colorToImage[tank.color];
+  ctx.save();
+  ctx.translate(tank.x, tank.y);
+  // draw tank name
+  ctx.fillText(tank.name, 0, 30);
+  ctx.strokeRect(-2, 35, 25, 7);
+  ctx.fillStyle = 'rgb(' + Math.round((1 - num) * 255) + ', ' + Math.round(num * 255) + ', 0)';
+  ctx.fillRect(-1, 36, Math.round(num * 23), 5);
+  // center on tank image which is 16 x 16
+  ctx.translate(8, 8);
+  ctx.rotate(tank.rotation);
+  ctx.drawImage(tankImage, -8, -8);
+  ctx.restore();
 }
 
 function drawVictory(victor: game.Tank, ctx: CanvasRenderingContext2D): void {
   ctx.font = '30px "Helvetica Neue"';
   ctx.clearRect(0, 0, state.width, state.height);
   ctx.fillText(`Congratulations ${victor.name} on glorious victory!`, 100, 100);
+  drawTank(ctx, victor);
 }
 
 var ais = require('./ais');
