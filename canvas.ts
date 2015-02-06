@@ -37,6 +37,7 @@ function draw(state: game.GameState, ctx: CanvasRenderingContext2D) {
 }
 
 function drawTank(ctx, tank) {
+  ctx.font = '10px "Helvetica Neue"';
   var num = tank.health / game.MAX_HEALTH;
   var tankImage = colorToImage[tank.color];
   ctx.save();
