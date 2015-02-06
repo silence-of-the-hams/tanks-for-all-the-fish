@@ -68,7 +68,7 @@ export class Tank {
       velocity: this.velocity,
       timeUntilShoot: this.timeUntilReadyToShoot,
       name: this.name,
-      health: this.health,
+      health: this.health
     };
   }
 }
