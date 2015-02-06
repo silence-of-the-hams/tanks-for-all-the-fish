@@ -3,3 +3,6 @@ node_modules
 build
 npm-debug.log
 ais.js
+canvas.js
+entity.js
+ais
